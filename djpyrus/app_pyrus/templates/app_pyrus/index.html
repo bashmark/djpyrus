@@ -8,5 +8,11 @@
 {% for item in content%}
 <p>{{ item }} </p>
 {% endfor %}
+
+<form method="POST" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Загрузить</button>
+</form>
 </body>
 </html>
