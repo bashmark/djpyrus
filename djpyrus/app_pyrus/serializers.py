@@ -12,7 +12,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class ChainSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChainModel
-        fields = ['name', 'address', 'port', 'scheme', 'version']
+        fields = ['name', 'address', 'port', 'scheme', 'version', 'login', 'password']
 
 
 class RmsSerializer(serializers.ModelSerializer):
@@ -20,4 +20,4 @@ class RmsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RmsModel
-        fields = ['name', 'address', 'port', 'scheme', 'version', 'chain']
+        fields = ['name', 'address', 'port', 'scheme', 'version', 'login', 'password', 'chain']

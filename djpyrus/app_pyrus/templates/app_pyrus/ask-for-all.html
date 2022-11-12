@@ -6,6 +6,8 @@
 </head>
 <body>
     <form method="POST" action="/ask-for-all/">
+        {% csrf_token %}
+        {{ form.as_p }}
         <button type="submit">Ask for all</button>
     </form>
     <br>

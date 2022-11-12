@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>load json</title>
+</head>
+<body>
+    <form method="POST" action="/load-json/">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">load json</button>
+    </form>
+
+    {% for item in data%}
+    {{ item }}
+    <br>
+    {% endfor %}
+</body>
+</html>

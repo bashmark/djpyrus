@@ -68,5 +68,4 @@ def get_chain_servers(token=ACCESS_TOKEN):
             port = re.search(r':\d+', i.values[1]).group(0)[1:] if re.search(r':\d+', i.values[0]) else "443"
             line = [address, scheme, port]
             out.append(line)
-            print(out)
     return out
