@@ -13,3 +13,7 @@ class AskForAllForm(forms.Form):
 
 class LoadJsonForm(forms.Form):
     pass
+
+
+class GetOneTaskForm(forms.Form):
+    task = forms.IntegerField()

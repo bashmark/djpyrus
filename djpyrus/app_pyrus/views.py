@@ -6,8 +6,8 @@ from django.shortcuts import render
 from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 
-from .functions.load_dict_item_in_db import load_dict_item_in_db
-from .pyrus_api import get_rms_servers, get_chain_servers
+from .functions.load_kk_in_db import load_kk_in_db
+from .pyrus_api import one_task, get_KK
 from .models import RmsModel, ChainModel
 from .serializers import ChainSerializer, RmsSerializer
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, \
@@ -15,55 +15,8 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelM
 from rest_framework.generics import GenericAPIView
 import rest_framework.permissions
 
-from .froms import AskVersionForm, AskForAllForm, LoadJsonForm
+from .froms import AskVersionForm, AskForAllForm, LoadJsonForm, GetOneTaskForm
 from .functions.ask_version import ask_version, ask_for_all
-
-
-def import_rms(request):
-    """
-    устаревший функционал. импорт из справочников
-    :param request:
-    :return:
-    """
-    content = []
-    lines = get_rms_servers()
-    if request.method == 'POST':
-        for line in lines:
-            if RmsModel.objects.filter(address=line[0]):
-                pass
-                # print(f"Server {line[0]} already imported.")
-            else:
-                version = ask_version(scheme=line[2], address=line[0], port=line[3])
-
-                RmsModel.objects.create(name=line[1], address=line[0], port=line[3], scheme=line[2], login="admin",
-                                        password="resto#tb", version=version)
-                error = 'not available'
-                content.append(
-                    [f"Server name: {line[1]}, address: {line[0]}, version: {version if version else error} imported."])
-
-    return render(request, 'app_pyrus/import_rms.html', {'content': content})
-
-
-def import_chain(request):
-    """
-    устаревший функционал. импорт из справочников
-    :param request:
-    :return:
-    """
-    lines = get_chain_servers()
-    content = []
-    if request.method == 'POST':
-        for line in lines:
-            if ChainModel.objects.filter(address=line[0]):
-                pass
-            else:
-                version = ask_version(scheme=line[1], address=line[0], port=line[2])
-                ChainModel.objects.create(address=line[0], port=line[2], scheme=line[1], login='admin',
-                                          password='resto#tb', version=version)
-                error = 'not available'
-                content.append([f"Server address: {line[0]}, version: {version if version else error} imported."])
-
-    return render(request, 'app_pyrus/import_chain.html', {'content': content})
 
 
 class RmsList(ListModelMixin, CreateModelMixin, GenericAPIView):
@@ -90,21 +43,6 @@ class ChainList(ListModelMixin, CreateModelMixin, GenericAPIView):
         return self.list(request)
 
 
-def ask_version_view(request):
-    if request.method == 'POST':
-        form = AskVersionForm(request.POST)
-        if form.is_valid():
-            scheme = form.cleaned_data.get('scheme')
-            address = form.cleaned_data.get('address')
-            port = str(form.cleaned_data.get('port'))
-            content = ask_version(scheme, address, port)
-            return render(request, 'app_pyrus/ask_version.html', {'form': form, 'content': content})
-    else:
-
-        form = AskVersionForm()
-    return render(request, 'app_pyrus/ask_version.html', {'form': form})
-
-
 def ask_for_all_view(request):
     if request.method == "POST":
         form = AskForAllForm(request.POST)
@@ -120,14 +58,23 @@ def load_json_view(request):
     if request.method == "POST":
         form = LoadJsonForm(request.POST)
         if form.is_valid():
-            path = os.path.join(os.path.abspath(settings.MEDIA_ROOT), 'out.json')
-            with open(path, 'r') as file:
-                data = json.load(file)
-                for item in data:
-                    load_dict_item_in_db(item)
+            log = load_kk_in_db()
 
-            return render(request, 'app_pyrus/load_json.html', {'form': form, 'data': data})
+            return render(request, 'app_pyrus/load_json.html', {'form': form, 'log': log})
 
     else:
         form = LoadJsonForm()
     return render(request, 'app_pyrus/load_json.html', {'form': form})
+
+
+def get_one_task_view(request):
+    if request.method == "POST":
+        form = GetOneTaskForm(request.POST)
+        if form.is_valid():
+            id_task = form.cleaned_data.get('task')
+            task_data = one_task(id_task=id_task)
+            return render(request, 'app_pyrus/get_one_task.html', {'form': form, 'data': task_data})
+    else:
+        form = GetOneTaskForm()
+    return render(request, 'app_pyrus/get_one_task.html', {'form': form,})
+

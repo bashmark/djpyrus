@@ -5,15 +5,14 @@
     <title>load json</title>
 </head>
 <body>
-    <form method="POST" action="/load-json/">
+    <form method="POST" action="/api/load-json/">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">load json</button>
     </form>
 
-    {% for item in data%}
-    {{ item }}
-    <br>
-    {% endfor %}
+
+    {{ log }}
+
 </body>
 </html>

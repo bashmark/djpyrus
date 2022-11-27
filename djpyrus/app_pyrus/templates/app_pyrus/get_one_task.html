@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>one task</title>
+</head>
+<body>
+    <form method="POST" action="/api/get-one-task/">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">get task</button>
+    </form>
+
+    {% for item in data%}
+    {{ item }}
+    <br>
+    {% endfor %}
+</body>
+</html>
