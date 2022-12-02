@@ -1,15 +1,10 @@
-import json
-import os
-import re
-
 from django.shortcuts import render
-from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 
 from .functions.load_kk_in_db import load_kk_in_db
 from .pyrus_api import one_task, get_KK
-from .models import RmsModel, ChainModel
-from .serializers import ChainSerializer, RmsSerializer
+from .models import RmsModel, ChainModel, RevisionModel
+from .serializers import ChainSerializer, RmsSerializer, RevisionSerializer
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, \
     DestroyModelMixin
 from rest_framework.generics import GenericAPIView
@@ -25,6 +20,18 @@ class RmsList(ListModelMixin, CreateModelMixin, GenericAPIView):
 
     def get_queryset(self):
         queryset = RmsModel.objects.all()
+        return queryset
+
+    def get(self, request):
+        return self.list(request)
+
+
+class RevisionView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    serializer_class = RevisionSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = RevisionModel.objects.all()
         return queryset
 
     def get(self, request):

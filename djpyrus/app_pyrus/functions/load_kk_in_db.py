@@ -13,7 +13,7 @@ def load_kk_in_db():
             if not ChainModel.objects.filter(address=data['address']):
                 print(f"chain {data['address']} not in db")
                 log += f"chain {data['address']} not in db\n"
-                ChainModel.objects.create(name=item['name'], address=data['address'], login='admin', password='resto#tb',
+                ChainModel.objects.create(name=item['name'], address=data['address'], login='admin', password='',
                                           port=data['port'], scheme=data['scheme'],
                                           version=ask_version(scheme=data['scheme'], address=data['address'],
                                                               port=data['port']))
@@ -22,7 +22,7 @@ def load_kk_in_db():
             if not RmsModel.objects.filter(address=data['address']):
                 print(f"rms {data['address']} not in db")
                 log += f"rms {data['address']} not in db\n"
-                RmsModel.objects.create(name=item['name'], address=data['address'], login='admin', password='resto#tb',
+                RmsModel.objects.create(name=item['name'], address=data['address'], login='admin', password='',
                                         port=data['port'], scheme=data['scheme'],
                                         version=ask_version(scheme=data['scheme'], address=data['address'],
                                                             port=data['port']),
@@ -35,7 +35,7 @@ def load_kk_in_db():
                 if not RmsModel.objects.filter(address=data['address']):
                     print(f"rms {data['address']} not in db")
                     log += f"rms {data['address']} not in db\n"
-                    RmsModel.objects.create(name=rms['name'], address=data['address'], login='admin', password='resto#tb',
+                    RmsModel.objects.create(name=rms['name'], address=data['address'], login='admin', password='',
                                             port=data['port'], scheme=data['scheme'],
                                             version=ask_version(scheme=data['scheme'], address=data['address'],
                                                                 port=data['port']),

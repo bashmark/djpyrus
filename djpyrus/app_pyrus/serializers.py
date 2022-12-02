@@ -1,7 +1,12 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import ChainModel, RmsModel
+from .models import ChainModel, RmsModel, RevisionModel
 
+
+class RevisionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RevisionModel
+        fields = ['revision',]
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

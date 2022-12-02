@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+   redis:
+       image: redis:5-alpine
+       restart: always
+
+   celery-worker:
+       build: ./djpyrus
+       restart: always
+       command: celery -A djpyrus worker --loglevel=info
+       volumes:
+#         - "C:/Users/Mark/Documents/djpyrus/data:/usr/src/djpyrus/data"
+         - "/usr/src/djpyrus/data:/usr/src/djpyrus/data"
+
+   celery-beat:
+       build: ./djpyrus
+       restart: always
+       command: celery -A djpyrus beat --loglevel=info
+       volumes:
+#         - "C:/Users/Mark/Documents/djpyrus/data:/usr/src/djpyrus/data"
+         - "/usr/src/djpyrus/data:/usr/src/djpyrus/data"
+
+
+   web:
+     build: ./djpyrus
+     restart: always
+     #command: python /usr/src/djpyrus/manage.py runserver 0.0.0.0:8000
+     entrypoint: ./entrypoint.sh
+     volumes:
+#       - "C:/Users/Mark/Documents/djpyrus/data:/usr/src/djpyrus/data"
+#       - "C:/Users/Mark/Documents/djpyrus/staticfiles:/usr/src/djpyrus/staticfiles"
+       - "/usr/src/djpyrus/data:/usr/src/djpyrus/data"
+       - "/usr/src/djpyrus/staticfiles:/usr/src/djpyrus/staticfiles"
+#     ports:
+#       - "8000:8000"
+     depends_on:
+       - redis
+       - celery-worker
+       - celery-beat
+   nginx:
+     build: ./nginx
+     restart: always
+     volumes:
+#       - "C:/Users/Mark/Documents/djpyrus/staticfiles:/usr/src/djpyrus/staticfiles"
+       - "/usr/src/djpyrus/staticfiles:/usr/src/djpyrus/staticfiles"
+     ports:
+       - 80:80
+     depends_on:
+       - web

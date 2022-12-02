@@ -22,28 +22,21 @@ def ask_for_all():
     :return:
     """
     queryset = RmsModel.objects.all()
-    content = []
     for item in queryset:
-        # time.sleep(1)
-        # print(f'{item.scheme}://{item.address}:{item.port}/resto')
         version = ask_version(item.scheme, item.address, item.port)
         version_in_base = RmsModel.objects.get(id=item.id).version
         if version != version_in_base:
-            t = RmsModel.objects.filter(id=item.id).update(version=version)
-            print(f'{item.address}: {t}')
-            content.append([item.address, t])
+            RmsModel.objects.filter(id=item.id).update(version=version)
+            print(f'{item.address}: version updated {version_in_base} -> {version}')
 
     """
     Chain
     """
     queryset = ChainModel.objects.all()
     for item in queryset:
-        # time.sleep(1)
-        # print(f'{item.scheme}://{item.address}:{item.port}/resto')
         version = ask_version(item.scheme, item.address, item.port)
         version_in_base = ChainModel.objects.get(id=item.id).version
         if version != version_in_base:
-            t = ChainModel.objects.filter(id=item.id).update(version=version)
-            print(f'{item.address}: {t}')
-            content.append([item.address, t])
-    return content
+            ChainModel.objects.filter(id=item.id).update(version=version)
+            print(f'{item.address}: version updated {version_in_base} -> {version}')
+

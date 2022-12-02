@@ -1,13 +1,7 @@
-import os
 import re
-from pprint import pprint
 from pyrus import client
 import pyrus.models.requests
 from .config import LOGIN, SECURE_KEY, ACCESS_TOKEN, set_token
-import functools
-import operator
-from pandas.core.common import flatten
-from .models import AccessToken
 
 
 def login() -> str:
