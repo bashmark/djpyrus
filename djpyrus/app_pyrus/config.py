@@ -14,9 +14,7 @@ ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
 ADMIN_PASS = os.getenv('ADMIN_PASS')
 
 
-
 def set_token(value):
-
     unset_key(dotenv_path='./data/.env', key_to_unset='ACCESS_TOKEN')
     set_key(dotenv_path='./data/.env', key_to_set='ACCESS_TOKEN', value_to_set=value)
     load_dotenv(override=True)

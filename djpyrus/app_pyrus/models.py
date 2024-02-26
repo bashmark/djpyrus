@@ -1,6 +1,5 @@
+import re
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 class RevisionModel(models.Model):
     revision = models.PositiveIntegerField(verbose_name='revision')
@@ -45,9 +44,22 @@ class RmsModel(models.Model):
         RevisionModel.objects.filter(id=1).update(revision=RevisionModel.objects.get(id=1).revision + 1)
         super().delete(*args, **kwargs)
 
+    def __str__(self):
+        return str(self.address)
+
+
+class RemotesModel(models.Model):
+    name = models.CharField(max_length=200, verbose_name='remote_name', blank=True, null=True)
+    remote = models.CharField(max_length=200, verbose_name='remote', blank=True, null=True)
+    password = models.CharField(max_length=200, verbose_name='password', blank=True, null=True)
+    rms = models.ForeignKey(RmsModel, on_delete=models.CASCADE, related_name='remote', blank=True, null=True)
+    chain = models.ForeignKey(ChainModel, on_delete=models.CASCADE, related_name='remote', blank=True, null=True)
 
     def __str__(self):
-        return str(self.name)
+        return str([re.sub(r' ', '', str(self.remote)), self.name, self.password])
+
+    # class Meta:
+    #     unique_together = [['rms', 'remote'], ['chain', 'remote']]
 
 
 class AccessToken(models.Model):

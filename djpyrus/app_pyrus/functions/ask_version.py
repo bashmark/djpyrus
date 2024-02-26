@@ -1,3 +1,5 @@
+import logging
+
 import requests
 import xml.etree.ElementTree as ET
 
@@ -12,31 +14,26 @@ def ask_version(scheme, address, port):
         version = tree.find("version").text[:-2]
         return version
     except Exception as e:
-        print(e)
+        logging.error(e)
         return None
 
 
 def ask_for_all():
-    """
-    RMS
-    :return:
-    """
+    # RMS
     queryset = RmsModel.objects.all()
     for item in queryset:
         version = ask_version(item.scheme, item.address, item.port)
         version_in_base = RmsModel.objects.get(id=item.id).version
         if version != version_in_base:
             RmsModel.objects.filter(id=item.id).update(version=version)
-            print(f'{item.address}: version updated {version_in_base} -> {version}')
+            logging.info(f'{item.address}: version updated {version_in_base} -> {version}')
 
-    """
-    Chain
-    """
+    # Chain
     queryset = ChainModel.objects.all()
     for item in queryset:
         version = ask_version(item.scheme, item.address, item.port)
         version_in_base = ChainModel.objects.get(id=item.id).version
         if version != version_in_base:
             ChainModel.objects.filter(id=item.id).update(version=version)
-            print(f'{item.address}: version updated {version_in_base} -> {version}')
+            logging.info(f'{item.address}: version updated {version_in_base} -> {version}')
 

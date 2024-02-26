@@ -1,53 +1,8 @@
 from django.shortcuts import render
-from rest_framework.permissions import IsAuthenticated
-
 from .functions.load_kk_in_db import load_kk_in_db
 from .pyrus_api import one_task, get_KK
-from .models import RmsModel, ChainModel, RevisionModel
-from .serializers import ChainSerializer, RmsSerializer, RevisionSerializer
-from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, \
-    DestroyModelMixin
-from rest_framework.generics import GenericAPIView
-import rest_framework.permissions
-
 from .froms import AskVersionForm, AskForAllForm, LoadJsonForm, GetOneTaskForm
 from .functions.ask_version import ask_version, ask_for_all
-
-
-class RmsList(ListModelMixin, CreateModelMixin, GenericAPIView):
-    serializer_class = RmsSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_queryset(self):
-        queryset = RmsModel.objects.all()
-        return queryset
-
-    def get(self, request):
-        return self.list(request)
-
-
-class RevisionView(ListModelMixin, CreateModelMixin, GenericAPIView):
-    serializer_class = RevisionSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_queryset(self):
-        queryset = RevisionModel.objects.all()
-        return queryset
-
-    def get(self, request):
-        return self.list(request)
-
-
-class ChainList(ListModelMixin, CreateModelMixin, GenericAPIView):
-    serializer_class = ChainSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_queryset(self):
-        queryset = ChainModel.objects.all()
-        return queryset
-
-    def get(self, request):
-        return self.list(request)
 
 
 def ask_for_all_view(request):
